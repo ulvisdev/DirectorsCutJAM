@@ -39,7 +39,21 @@ class DIRECTORSCUTJAM_API ASNIPPuzzle : public AActor
     virtual void BeginPlay() override;
     virtual void Tick(float Dt) override;
     UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP") float Spacing=200;
-    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP") float CompressionSeconds=.38f;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP|Art") TObjectPtr<class UMaterialInterface> PaperMaterial;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP|Art") TObjectPtr<class UMaterialInterface> MetalMaterial;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP") float CompressionSeconds=.20f;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP|Feel") float SnipSeconds=.08f;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP|Feel") float AnticipationSeconds=.08f;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP|Feel") float ImpactSeconds=.07f;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP|Feel") float AnticipationTiles=.04f;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP|Feel") float CompressionExponent=3.f;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP|Feel") float VibrationAmplitude=2.f;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP|Feel") float CameraShakeIntensity=2.f;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP|Feel") int32 ImpactParticleCount=12;
+    float ImpactPulse=0;
+    FVector Seam=FVector::ZeroVector;
+    static float CompressCoordinate(float Value,float A,float B);
+    FVector SafePlayerPosition(FVector Desired) const;
     UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP") int32 Stage=0;
     UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="SNIP") FIntVector Dimensions;
     UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="SNIP") FVector ExitPosition;
@@ -63,11 +77,13 @@ class DIRECTORSCUTJAM_API ASNIPPuzzle : public AActor
     FString Title() const;
     private:
     FSNIPState Capture() const;
-    void Restore(const FSNIPState& State);
+    void Restore(const FSNIPState& State,int32 Style=0);
     void AddCell(FIntVector P,bool Metal=false);
     TArray<FVector> From,To;
     FVector PlayerFrom,PlayerTo,ExitFrom;
     float Animation=0,FinishTime=0;
+    int32 AnimationStyle=0;
+    bool ImpactPlayed=false;
 };
 UCLASS()
 class DIRECTORSCUTJAM_API ASNIPCharacter : public ACharacter
@@ -85,8 +101,21 @@ class DIRECTORSCUTJAM_API ASNIPCharacter : public ACharacter
     UPROPERTY(BlueprintReadOnly) int32 High=0;
     UPROPERTY(BlueprintReadOnly) bool Selecting=false;
     UPROPERTY(BlueprintReadOnly) bool Locked=false;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP|Input") float DragThreshold=7.f;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="SNIP|Input") float DirectionHysteresis=1.25f;
+    FVector FrozenVelocity=FVector::ZeroVector;
+    bool MovementFrozen=false;
+    EMovementMode FrozenMode=MOVE_Walking;
+    uint8 FrozenCustomMode=0;
+    UPROPERTY(VisibleAnywhere,BlueprintReadOnly) TObjectPtr<class USNIPPresentation> Presentation;
+    float ScissorFeedback=0;
+    bool Rejected=false;
+    void FreezeMovement();
+    void ResumeMovement();
+    void UpdateSelection();
     UPROPERTY() TObjectPtr<ASNIPPuzzle> Puzzle;
     UFUNCTION(BlueprintCallable) void SetView(int32 Mode);
+    void ApplyView(int32 Mode);
     void MouseDown();
     void MouseUp();
     void Cancel();

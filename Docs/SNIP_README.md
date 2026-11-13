@@ -1,5 +1,9 @@
 # SNIP! playable prototype
 
+Current version: **Cinematic update**. See [SNIP_CINEMATIC.md](SNIP_CINEMATIC.md)
+for the minimalist UI, interactive tutorial, menus, scene transitions and validation.
+Select PLAY on the title card after starting Play-In-Editor.
+
 Open `DirectorsCutJAM.uproject` with UE 5.8. The startup map is
 `/Game/SNIP/LV_SNIP_Prototype`. Press **Play → Selected Viewport**, then click
 the game viewport. Use Play rather than Simulate so the character is possessed.
@@ -13,25 +17,26 @@ materials, and `SNIPGameMode` override. No Blueprint wiring step is required.
 | WASD / Space | Walk / jump in normal view |
 | 1 | Angled perspective gameplay view |
 | 2 / 3 / 4 | Front X–Z / Top X–Y / Side Y–Z orthographic editing |
-| Hold LMB and drag | Choose a whole-cell band; the dominant drag direction locks its axis |
-| Release, then click LMB | Lock, then execute the selected cut |
+| Hold LMB and drag | Include the clicked tile; dominant direction can change with hysteresis |
+| Release LMB | Execute a valid cut immediately; no confirmation click |
 | RMB | Cancel selection |
 | Z / Y | Undo / redo |
 | R | Restart the current puzzle |
+| P / Escape | Pause; use P in PIE because the editor can consume Escape |
+| Tab | Dismiss tutorial |
+| Up / Down / Enter or mouse | Navigate menus |
 
-The mint doorway completes a puzzle. The next puzzle loads after the short
-“PERFECT CUT!” message. The final puzzle stays completed until restarted.
-Editing freezes the character. Compression blocks input and disables moving
-collision for 0.38 seconds, then restores collision at the exact logical positions.
+The mint doorway advances to the next scene through a short film splice. The final exit returns to the title card. Falling out of bounds resets the current scene and its history. Editing freezes the character. Compression blocks input and disables moving
+collision during the approximately 0.43-second snip/anticipation/accelerating-slide/impact sequence, then restores collision at exact logical positions. Airborne velocity is preserved across editing.
 
 ## Implemented architecture
 
 - `SNIPPuzzle` owns modular cells, material rules, slab validation, animation,
-  before/after snapshot history, safe recovery, and three isolated puzzle stages.
+  before/after snapshot history, safe recovery, and five isolated puzzle stages.
 - `SNIPCharacter` owns movement, four camera modes, native input bindings,
-  mouse deprojection, grid snapping, and the drag/lock/confirm interaction.
-- `SNIPHUD` draws controls, graph-paper grid, valid/invalid cutting bands,
-  dashed boundaries, scissors, exit labels, and completion feedback.
+  mouse deprojection, inclusive grid selection, and release-to-cut interaction.
+- `SNIPHUD` draws editing tools and filled destination ghosts, with no permanent gameplay panels.
+- `SNIPPresentation` owns title/pause menus, contextual tutorials and film transitions.
 - `SNIPGameMode` assigns the native pawn and HUD. Both the saved map and project
   defaults reference it. The runtime module remains declared in the `.uproject`.
 
@@ -43,11 +48,14 @@ metal outside it moves normally. The same operation handles X, Y, and Z regardle
 of which view initiated it. No runtime Boolean mesh operations or scripted
 solution teleports are used.
 
-Player/exit bounds, remaining support, and the final player capsule are checked
-before mutation. History stores independent before/after states so walking
+The player is immune to deletion. Paper beneath or intersecting the performer
+can be cut; the player maps to the compressed seam or moves with a surviving
+support. Overlaps resolve to the nearest clear cell-face candidate. Exit bounds
+and exit support remain protected. History stores independent before/after states so walking
 between cuts cannot overwrite an earlier redo result. A new cut discards only
 the undone branch. Undo restores removed meshes, collision, logical dimensions,
-metal, exit, and player position. Each puzzle has independent restart/history.
+metal and exit. Undo/redo retains the current player position when clear, with
+nearby overlap recovery. Each puzzle has independent restart/history.
 
 Input uses named native action/axis bindings in `DefaultInput.ini`, supported by
 the project's existing Enhanced Input component classes. No missing input action
@@ -67,6 +75,20 @@ Default grid spacing is 200 Unreal units; coordinates below are grid indices.
    view, remove Z `[2,4)`. Walk along the joined L-shaped route, then jump up the
    paper step and onto the metal exit platform. All three axes are needed, so
    at least two editing views are required.
+4. **Trapdoor:** Walk across the upper paper deck to X=1500, Y=500, above the
+   exit. Front view: remove Z `[5,6)`, including your footing. Return to play
+   and fall into the lower gallery. Steel walls protect the gallery.
+5. **Riding the Seam:** Front view: remove Z `[2,4)` to carry the elevated
+   island and player downward. Top view: remove Y `[3,9)` to join the depth
+   gap. Walk toward X=1900, Y=900 and drop onto the steel exit island.
+
+Gameplay 2.0 adds warm cut highlights, ghost destination outlines, animated
+scissors, cooler edit grading, configurable impact shake and screen-space paper
+flecks. Six generated temporary sound effects live in `Content/SNIP/Audio`;
+these are synthesized placeholders, not recorded scissors/cardboard Foley.
+Use `Scripts/test_snip2.py` for the new live PIE regression; older test scripts
+contain superseded confirmation-click and performer-protection expectations.
+Pre-upgrade recovery archive: `Backups/SNIP_before_Gameplay2_verified.zip`.
 
 Uncut horizontal gaps are 800–1000 units; the character's approximate maximum
 level-ground jump range is 515 units. Solved height steps are 200 units; jump

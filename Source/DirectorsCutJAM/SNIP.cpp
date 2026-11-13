@@ -1,4 +1,5 @@
 #include "SNIP.h"
+#include "SNIPPresentation.h"
 #include "Camera/CameraComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -14,8 +15,16 @@
 #include "Materials/MaterialInterface.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Modules/ModuleManager.h"
+#include "Sound/SoundBase.h"
 IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, DirectorsCutJAM, "DirectorsCutJAM");
 DEFINE_LOG_CATEGORY_STATIC(LogSNIP,Log,All);
+static void SNIPSound(UObject* Context,const TCHAR* Name)
+{
+    const FString Path=FString::Printf(TEXT("/Game/SNIP/Audio/%s.%s"),Name,Name);
+    float Volume=1;
+    if(auto* P=Cast<ASNIPCharacter>(UGameplayStatics::GetPlayerCharacter(Context,0)))if(P->Presentation)Volume=P->Presentation->GetVolume();
+    if(auto* Sound=LoadObject<USoundBase>(nullptr,*Path))UGameplayStatics::PlaySound2D(Context,Sound,.35f*Volume);
+}
 ASNIPPuzzle::ASNIPPuzzle()
 {
     PrimaryActorTick.bCanEverTick=true;
@@ -31,7 +40,8 @@ FVector ASNIPPuzzle::CellWorld(FIntVector P) const
 }
 FString ASNIPPuzzle::Title() const
 {
-    return Stage==0?TEXT("01 / THE MISSING BRIDGE"):Stage==1?TEXT("02 / TOO HIGH!"):TEXT("03 / THINK DIFFERENTLY");
+    const TCHAR* Titles[]={TEXT("01 / THE MISSING BRIDGE"),TEXT("02 / TOO HIGH!"),TEXT("03 / THINK DIFFERENTLY"),TEXT("04 / TRAPDOOR"),TEXT("05 / RIDING THE SEAM")};
+    return Titles[FMath::Clamp(Stage,0,4)];
 }
 void ASNIPPuzzle::AddCell(FIntVector P,bool Metal)
 {
@@ -43,11 +53,16 @@ void ASNIPPuzzle::AddCell(FIntVector P,bool Metal)
     M->SetupAttachment(RootComponent);
     M->SetMobility(EComponentMobility::Movable);
     M->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Cube.Cube")));
-    M->SetMaterial(0,LoadObject<UMaterialInterface>(nullptr,Metal?TEXT("/Game/SNIP/Materials/M_Metal.M_Metal"):TEXT("/Game/SNIP/Materials/M_Paper.M_Paper")));
+    auto* Chosen=Metal?MetalMaterial.Get():PaperMaterial.Get();
+    M->SetMaterial(0,Chosen?Chosen:LoadObject<UMaterialInterface>(nullptr,Metal?TEXT("/Game/SNIP/Materials/M_Metal.M_Metal"):TEXT("/Game/SNIP/Materials/M_Paper.M_Paper")));
     if(!Metal)if(auto* Mat=M->CreateDynamicMaterialInstance(0))
     {
-        const FLinearColor Colors[]={FLinearColor(.63f,.79f,.65f),FLinearColor(.59f,.75f,.84f),FLinearColor(.91f,.67f,.53f)};
-        Mat->SetVectorParameterValue(TEXT("Tint"),Colors[(Stage+(P.X/4))%3]);
+        // One deliberate palette for generated prototype paper; assigned final art is untouched.
+        if(!Chosen || Chosen->GetPathName().StartsWith(TEXT("/Game/SNIP/Cinematic/")))
+        {
+            const FLinearColor Colors[]={FLinearColor(.949f,.894f,.784f),FLinearColor(.537f,.580f,.467f),FLinearColor(.337f,.553f,.576f),FLinearColor(.839f,.424f,.396f),FLinearColor(.949f,.894f,.784f)};
+            Mat->SetVectorParameterValue(TEXT("Tint"),Colors[FMath::Clamp(Stage,0,4)]);
+        }
     }
     M->SetCollisionProfileName(TEXT("BlockAll"));
     M->RegisterComponent();
@@ -58,10 +73,15 @@ void ASNIPPuzzle::AddCell(FIntVector P,bool Metal)
 }
 void ASNIPPuzzle::BuildPuzzle()
 {
-    for(auto& C:Cells)if(C.Mesh)C.Mesh->DestroyComponent();
+    for(auto& C:Cells)if(C.Mesh)
+    {
+        TArray<USceneComponent*> AttachedParts;C.Mesh->GetChildrenComponents(true,AttachedParts);
+        for(auto* Child:AttachedParts)Child->DestroyComponent();
+        C.Mesh->DestroyComponent();
+    }
     Cells.Empty();
     if(ExitMesh)ExitMesh->DestroyComponent();
-    Stage=FMath::Clamp(Stage,0,2);
+    Stage=FMath::Clamp(Stage,0,4);
     Busy=false;
     Complete=false;
     FinishTime=0;
@@ -104,6 +124,39 @@ void ASNIPPuzzle::BuildPuzzle()
         SpawnPoint=CellWorld({1,1,0})+FVector(0,0,Spacing*.5f+90);
         ExitPosition=CellWorld({8,8,4})+FVector(0,0,Spacing*.5f+95);
     }
+    if(Stage==3)
+    {
+        // Cut the paper floor you stand on; drop into a protected lower gallery.
+        Dimensions=FIntVector(9,5,9);
+        for(int x=0;x<9;x++)for(int y=0;y<5;y++)AddCell({x,y,0},true);
+        for(int x=0;x<9;x++)for(int y=0;y<5;y++)AddCell({x,y,5});
+        for(int x=0;x<9;x++)for(int y=0;y<5;y++)if(x==0||x==8||y==0||y==4)
+            for(int z=1;z<5;z++)AddCell({x,y,z},true);
+        // A metal partition cannot be cut. The upper deck is the only way over it.
+        for(int y=0;y<5;y++)for(int z=1;z<5;z++)AddCell({5,y,z},true);
+        SpawnPoint=CellWorld({1,2,5})+FVector(0,0,Spacing*.5f+90);
+        ExitPosition=CellWorld({7,2,0})+FVector(0,0,Spacing*.5f+95);
+    }
+    if(Stage==4)
+    {
+        Dimensions=FIntVector(14,12,9);
+        // Ride a surviving elevated paper island as empty space is removed.
+        for(int x=0;x<3;x++)for(int y=0;y<3;y++)AddCell({x,y,0},true);
+        for(int x=8;x<11;x++)for(int y=0;y<3;y++)AddCell({x,y,4});
+        for(int x=8;x<11;x++)for(int y=9;y<12;y++)AddCell({x,y,0},true);
+        SpawnPoint=CellWorld({9,1,4})+FVector(0,0,Spacing*.5f+90);
+        ExitPosition=CellWorld({9,10,0})+FVector(0,0,Spacing*.5f+95);
+    }
+    if(Stage==0)for(auto& C:Cells)if(C.Grid==FIntVector(2,2,0))
+    {
+        auto* Prop=NewObject<UStaticMeshComponent>(this);
+        AddInstanceComponent(Prop);Prop->SetupAttachment(C.Mesh);
+        Prop->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Cube.Cube")));
+        Prop->SetMaterial(0,LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/SNIP/Cinematic/Materials/M_SNIP_Cardboard.M_SNIP_Cardboard")));
+        Prop->SetCollisionProfileName(TEXT("BlockAll"));Prop->SetMobility(EComponentMobility::Movable);
+        Prop->SetRelativeLocation(FVector(0,0,65));Prop->SetRelativeScale3D(FVector(.45f,.9f,.3f));Prop->RegisterComponent();
+        // Inherit deletion, restoration and motion with its owning paper cell.
+    }
     ExitMesh=NewObject<UStaticMeshComponent>(this);
     AddInstanceComponent(ExitMesh);
     ExitMesh->SetupAttachment(RootComponent);
@@ -117,9 +170,13 @@ void ASNIPPuzzle::BuildPuzzle()
     if(auto* P=Player())
     {
         P->SetActorLocation(SpawnPoint,false,nullptr,ETeleportType::TeleportPhysics);
+        P->FrozenVelocity=FVector::ZeroVector;
+        P->MovementFrozen=false;
+        P->GetCharacterMovement()->SetComponentTickEnabled(true);
+        P->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
         P->GetCharacterMovement()->StopMovementImmediately();
         P->Cancel();
-        P->SetView(0);
+        P->ApplyView(0);
     }
     Notice=TEXT("Reach the mint doorway. Cut away space to bring the world together.");
     InitialState=Capture();
@@ -155,10 +212,6 @@ FString ASNIPPuzzle::ValidateCut(int A,int L,int H) const
         return V+Radius>Min+.1f && V-Radius<Max-.1f;
     };
     if(Hit(ExitPosition[A],A==2?90:45))return TEXT("The exit is protected.");
-    if(auto* P=Player())
-    {
-        if(Hit(P->GetActorLocation()[A],A==2?88:34))return TEXT("Your paper performer is inside this cut.");
-    }
     for(const auto& C:Cells)if(C.Alive&&C.Metal&&C.Grid[A]>=L&&C.Grid[A]<H)return TEXT("Metal cannot be snipped. Choose another layer.");
     // Keep a surviving landing under the performer and doorway. Slabs may remove
     // a support layer only when compression supplies another surface below it.
@@ -175,20 +228,6 @@ FString ASNIPPuzzle::ValidateCut(int A,int L,int H) const
         return false;
     };
     if(!HasLanding(ExitPosition))return TEXT("Leave a landing beneath the exit.");
-    if(auto* P=Player())if(!HasLanding(P->GetActorLocation()))return TEXT("Leave some paper beneath your performer.");
-    // Validate the final capsule against every surviving cell before accepting a cut.
-    if(auto* P=Player())
-    {
-        FVector Q=P->GetActorLocation();
-        if(Q[A]>=Max)Q[A]-=(H-L)*Spacing;
-        for(const auto& C:Cells)if(C.Alive && !(C.Grid[A]>=L&&C.Grid[A]<H))
-        {
-            FIntVector G=C.Grid;
-            if(G[A]>=H)G[A]-=H-L;
-            FVector D=(Q-CellWorld(G)).GetAbs();
-            if(D.X<Spacing*.5f+35 && D.Y<Spacing*.5f+35 && D.Z<Spacing*.5f+88.5f)return TEXT("That cut would squeeze the performer.");
-        }
-    }
     return TEXT("");
 }
 bool ASNIPPuzzle::ApplyCut(int A,int L,int H)
@@ -197,6 +236,8 @@ bool ASNIPPuzzle::ApplyCut(int A,int L,int H)
     if(!Why.IsEmpty())
     {
         Notice=Why;
+        if(auto* P=Player())P->Presentation->CutResult(false,Why);
+        SNIPSound(this,TEXT("SNIP_Reject"));
         return false;
     }
     if(auto* P=Player())if(P->View==0)
@@ -204,6 +245,7 @@ bool ASNIPPuzzle::ApplyCut(int A,int L,int H)
         Notice=TEXT("Choose an orthographic view first.");
         return false;
     }
+    if(auto* P=Player())if(P->Presentation->BlocksEditing())return false;
     History.SetNum(Cursor);
     FSNIPCommand Command;
     Command.Before=Capture();
@@ -215,18 +257,31 @@ bool ASNIPPuzzle::ApplyCut(int A,int L,int H)
         else if(S.Positions[i][A]>=H)S.Positions[i][A]-=D;
     }
     const float End=GetActorLocation()[A]+H*Spacing;
-    if(S.Player[A]>=End)S.Player[A]-=D*Spacing;
+    S.Player[A]=CompressCoordinate(S.Player[A],End-D*Spacing,End);
+    // Use the exact surviving support displacement, including a capsule straddling a seam.
+    if(auto* P=Player())for(int i=0;i<Cells.Num();++i)
+    {
+        const FVector Center=CellWorld(Cells[i].Grid),Q=P->GetActorLocation();
+        if(Cells[i].Alive && S.Alive[i] && FMath::Abs(Q.Z-88-(Center.Z+Spacing*.5f))<8 &&
+           FMath::Abs(Q.X-Center.X)<Spacing*.5f && FMath::Abs(Q.Y-Center.Y)<Spacing*.5f)
+            S.Player=Q+CellWorld(S.Positions[i])-Center;
+    }
+    Seam=GetActorLocation()+FVector(Dimensions)*Spacing*.5f;
+    Seam[A]=End-D*Spacing;
     if(S.Exit[A]>=End)S.Exit[A]-=D*Spacing;
     S.Size[A]-=D;
     Command.After=S;
     History.Add(Command);
     ++Cursor;
     Restore(S);
+    if(auto* P=Player())P->Presentation->CutResult(true,TEXT(""));
+    SNIPSound(this,TEXT("SNIP_Snip"));
+    SNIPSound(this,TEXT("SNIP_Slide"));
     Notice=TEXT("SNIP!  Space removed. Possibilities added.");
     UE_LOG(LogSNIP,Display,TEXT("Cut axis=%d [%d,%d) history=%d"),A,L,H,Cursor);
     return true;
 }
-void ASNIPPuzzle::Restore(const FSNIPState& S)
+void ASNIPPuzzle::Restore(const FSNIPState& S,int32 Style)
 {
     From.Empty();
     To.Empty();
@@ -237,22 +292,26 @@ void ASNIPPuzzle::Restore(const FSNIPState& S)
         C.Grid=S.Positions[i];
         C.Alive=S.Alive[i];
         To.Add(CellWorld(C.Grid));
-        C.Mesh->SetVisibility(C.Alive);
+        C.Mesh->SetVisibility(C.Alive,true);
         C.Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        TArray<USceneComponent*> AttachedParts;C.Mesh->GetChildrenComponents(true,AttachedParts);
+        for(auto* Child:AttachedParts)if(auto* Mesh=Cast<UStaticMeshComponent>(Child))Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     }
     PlayerFrom=Player()?Player()->GetActorLocation():S.Player;
-    PlayerTo=S.Player;
+    PlayerTo=SafePlayerPosition(S.Player);
     ExitFrom=ExitPosition;
     ExitPosition=S.Exit;
     Dimensions=S.Size;
     if(auto* P=Player())
     {
-        P->GetCharacterMovement()->StopMovementImmediately();
-        P->GetCharacterMovement()->DisableMovement();
+        P->FreezeMovement();
+        P->FrozenMode=MOVE_Falling; // Edited support must be reacquired; pure view changes preserve the mode.
         P->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         P->Cancel();
     }
     Animation=0;
+    AnimationStyle=Style;
+    ImpactPlayed=false;
     Busy=true;
     Complete=false;
 }
@@ -260,7 +319,11 @@ void ASNIPPuzzle::Undo()
 {
     if(!Busy&&Cursor>0)
     {
-        Restore(History[--Cursor].Before);
+        FSNIPState S=History[--Cursor].Before;
+        if(auto* P=Player())S.Player=P->GetActorLocation();
+        Restore(S,1);
+        if(auto* P=Player())P->Presentation->HistoryUsed(true);
+        SNIPSound(this,TEXT("SNIP_Undo"));
         Notice=TEXT("Unsnipped. Try a different idea.");
     }
 }
@@ -268,65 +331,87 @@ void ASNIPPuzzle::Redo()
 {
     if(!Busy&&Cursor<History.Num())
     {
-        Restore(History[Cursor++].After);
+        FSNIPState S=History[Cursor++].After;
+        if(auto* P=Player())S.Player=P->GetActorLocation();
+        Restore(S,2);
+        if(auto* P=Player())P->Presentation->HistoryUsed(false);
+        SNIPSound(this,TEXT("SNIP_Redo"));
         Notice=TEXT("Snipped again.");
     }
 }
 void ASNIPPuzzle::Restart()
 {
-    if(!Busy)BuildPuzzle();
+    if(!Busy)if(auto* P=Player())P->Presentation->Retry();
 }
 void ASNIPPuzzle::Tick(float Dt)
 {
     Super::Tick(Dt);
+    ImpactPulse=FMath::Max(0.f,ImpactPulse-Dt*8);
     if(Busy)
     {
         Animation+=Dt;
-        const float T=FMath::Clamp(Animation/FMath::Max(.05f,CompressionSeconds),0.f,1.f);
-        const float E=1-FMath::Pow(1-T,3);
-        for(int i=0; i<Cells.Num(); i++)Cells[i].Mesh->SetWorldLocation(FMath::Lerp(From[i],To[i],E));
+        const float Scale=AnimationStyle==2?.65f:1.f;
+        const float Snip=FMath::Max(.001f,SnipSeconds)*Scale;
+        const float Ant=FMath::Max(.001f,AnticipationSeconds)*Scale;
+        const float Slide=FMath::Max(.01f,CompressionSeconds)*Scale;
+        const float Impact=FMath::Max(.001f,ImpactSeconds)*Scale;
+        const float HitTime=Snip+Ant+Slide;
+        const float Duration=AnimationStyle==1?.2f:HitTime+Impact;
+        const float T=FMath::Clamp(Animation/Duration,0.f,1.f);
+        float E=AnimationStyle==1?1-FMath::Pow(1-T,3):
+            FMath::Pow(FMath::Clamp((Animation-Snip-Ant)/Slide,0.f,1.f),FMath::Max(1.f,CompressionExponent));
+        float Pull=0;
+        if(AnimationStyle!=1 && Animation>=Snip && Animation<HitTime)
+            Pull=Spacing*AnticipationTiles*(Animation<Snip+Ant?(Animation-Snip)/Ant:1-E);
+        float Shake=0;
+        if(AnimationStyle!=1 && Animation>=HitTime)
+        {
+            if(!ImpactPlayed){ImpactPlayed=true;ImpactPulse=1.f;SNIPSound(this,TEXT("SNIP_Impact"));}
+            Shake=FMath::Sin((Animation-HitTime)*180)*VibrationAmplitude*(1-FMath::Clamp((Animation-HitTime)/Impact,0.f,1.f));
+        }
+        for(int i=0; i<Cells.Num(); i++)
+        {
+            const FVector Direction=(From[i]-To[i]).GetSafeNormal();
+            Cells[i].Mesh->SetWorldLocation(FMath::Lerp(From[i],To[i],E)+Direction*(Pull+Shake));
+        }
         ExitMesh->SetWorldLocation(FMath::Lerp(ExitFrom,ExitPosition,E));
         if(auto* P=Player())P->SetActorLocation(FMath::Lerp(PlayerFrom,PlayerTo,E),false,nullptr,ETeleportType::TeleportPhysics);
         if(T>=1)
         {
             Busy=false;
-            for(auto& C:Cells)C.Mesh->SetCollisionEnabled(C.Alive?ECollisionEnabled::QueryAndPhysics:ECollisionEnabled::NoCollision);
+            for(int i=0;i<Cells.Num();++i)Cells[i].Mesh->SetWorldLocation(To[i]);
+            for(auto& C:Cells)
+            {
+                auto Collision=C.Alive?ECollisionEnabled::QueryAndPhysics:ECollisionEnabled::NoCollision;
+                C.Mesh->SetCollisionEnabled(Collision);
+                TArray<USceneComponent*> AttachedParts;C.Mesh->GetChildrenComponents(true,AttachedParts);
+                for(auto* Child:AttachedParts)if(auto* Mesh=Cast<UStaticMeshComponent>(Child))Mesh->SetCollisionEnabled(Collision);
+            }
             if(auto* P=Player())
             {
                 P->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-                P->GetCharacterMovement()->SetMovementMode(P->View?MOVE_None:MOVE_Falling);
+                P->SetActorLocation(PlayerTo,false,nullptr,ETeleportType::TeleportPhysics);
+                if(!P->View)P->ResumeMovement();
             }
         }
         return;
     }
     auto* P=Player();
-    if(!P)return;
+    if(!P||P->Presentation->BlocksMovement())return;
     if(!P->View&&!Complete&&FVector::Dist(P->GetActorLocation(),ExitPosition)<130)
     {
         Complete=true;
-        FinishTime=0;
-        Notice=TEXT("PERFECT CUT!");
-    }
-    if(Complete)
-    {
-        FinishTime+=Dt;
-        if(FinishTime>2.2f&&Stage<2)
-        {
-            ++Stage;
-            BuildPuzzle();
-        }
+        P->Presentation->NextScene();
         return;
     }
-    if(P->GetActorLocation().Z<GetActorLocation().Z-550)
-    {
-        P->SetActorLocation(Cursor?History[Cursor-1].After.Player:InitialState.Player,false,nullptr,ETeleportType::TeleportPhysics);
-        P->GetCharacterMovement()->StopMovementImmediately();
-        Notice=TEXT("Back on paper. Z undoes a cut; R restores this puzzle.");
-    }
+    if(!P->View&&P->GetActorLocation().Z<GetActorLocation().Z-550)
+        P->Presentation->Retry(true);
+
 }
 ASNIPCharacter::ASNIPCharacter()
 {
     PrimaryActorTick.bCanEverTick=true;
+    Presentation=CreateDefaultSubobject<USNIPPresentation>(TEXT("FilmPresentation"));
     GetCapsuleComponent()->InitCapsuleSize(34,88);
     bUseControllerRotationYaw=false;
     auto* M=GetCharacterMovement();
@@ -367,11 +452,12 @@ void ASNIPCharacter::BeginPlay()
         Puzzle=*I;
         break;
     }
-    SetView(0);
+    ApplyView(0);
+    Presentation->Initialize();
 }
 bool ASNIPCharacter::CanMove() const
 {
-    return !View&&Puzzle&&!Puzzle->Busy&&!Puzzle->Complete;
+    return !View&&Puzzle&&!Puzzle->Busy&&!Puzzle->Complete&&!Presentation->BlocksMovement();
 }
 void ASNIPCharacter::MoveForward(float V)
 {
@@ -387,11 +473,17 @@ void ASNIPCharacter::JumpPressed()
 }
 void ASNIPCharacter::SetView(int32 Mode)
 {
+    if(Presentation&&!Presentation->Applying){Presentation->StartView(Mode);return;}
+    ApplyView(Mode);
+}
+void ASNIPCharacter::ApplyView(int32 Mode)
+{
     if(Puzzle&&Puzzle->Busy)return;
-    View=FMath::Clamp(Mode,0,3);
+    const int Next=FMath::Clamp(Mode,0,3);
+    if(Next && !View)FreezeMovement();
+    View=Next;
     Cancel();
-    GetCharacterMovement()->StopMovementImmediately();
-    GetCharacterMovement()->SetMovementMode(View?MOVE_None:MOVE_Falling);
+    if(!View&&!Presentation->BlocksMovement())ResumeMovement();
     if(auto* PC=Cast<APlayerController>(Controller))
     {
         PC->bShowMouseCursor=View!=0;
@@ -416,36 +508,50 @@ void ASNIPCharacter::SetupPlayerInputComponent(UInputComponent* I)
     I->BindAction("SNIPUndo",IE_Pressed,this,&ASNIPCharacter::Undo);
     I->BindAction("SNIPRedo",IE_Pressed,this,&ASNIPCharacter::Redo);
     I->BindAction("SNIPRestart",IE_Pressed,this,&ASNIPCharacter::Restart);
+    I->BindAction("SNIPMenu",IE_Pressed,Presentation.Get(),&USNIPPresentation::ToggleMenu);
+    I->BindAction("SNIPSkip",IE_Pressed,Presentation.Get(),&USNIPPresentation::SkipTutorial);
+    I->BindKey(EKeys::Up,IE_Pressed,Presentation.Get(),&USNIPPresentation::Up);
+    I->BindKey(EKeys::Down,IE_Pressed,Presentation.Get(),&USNIPPresentation::Down);
+    I->BindKey(EKeys::Enter,IE_Pressed,Presentation.Get(),&USNIPPresentation::Accept);
 }
 FVector ASNIPCharacter::MouseWorld() const
 {
-    FVector O,D;
+    FVector O=FVector::ZeroVector,D=FVector::ZeroVector;
     if(auto* PC=Cast<APlayerController>(Controller))PC->DeprojectMousePositionToWorld(O,D);
+    if(Puzzle)
+    {
+        const int Hidden=View==1?1:View==2?2:0;
+        const float Plane=Puzzle->GetActorLocation()[Hidden]+Puzzle->Dimensions[Hidden]*Puzzle->Spacing*.5f;
+        if(FMath::Abs(D[Hidden])>.001f)O+=D*((Plane-O[Hidden])/D[Hidden]);
+    }
     return O;
 }
 void ASNIPCharacter::MouseDown()
 {
-    if(!View||!Puzzle||Puzzle->Busy||Puzzle->Complete)return;
-    if(Locked)
-    {
-        Puzzle->ApplyCut(Axis,Low,High);
-        return;
-    }
+    if(Presentation->MenuOpen){Presentation->Click();return;}
+    if(Presentation->BlocksEditing()||!View||!Puzzle||Puzzle->Busy||Puzzle->Complete)return;
     auto* PC=Cast<APlayerController>(Controller);
-    PC->GetMousePosition(DragScreen.X,DragScreen.Y);
+    if(!PC || !PC->GetMousePosition(DragScreen.X,DragScreen.Y))return;
     DragWorld=MouseWorld();
     Selecting=true;
     AxisLocked=false;
     Low=High=0;
+    Rejected=false;
 }
 void ASNIPCharacter::MouseUp()
 {
-    if(Selecting)
+    if(!Selecting)return;
+    UpdateSelection();
+    const bool Ready=AxisLocked&&Low<High;
+    Selecting=false;
+    if(Ready)
     {
-        Selecting=false;
-        Locked=AxisLocked&&Low<High;
+        Rejected=!Puzzle->ApplyCut(Axis,Low,High);
+        ScissorFeedback=1;
     }
+    Cancel();
 }
+
 void ASNIPCharacter::Cancel()
 {
     Selecting=false;
@@ -454,19 +560,20 @@ void ASNIPCharacter::Cancel()
 }
 void ASNIPCharacter::Undo()
 {
-    if(Puzzle)Puzzle->Undo();
+    if(Puzzle&&!Presentation->BlocksEditing())Puzzle->Undo();
 }
 void ASNIPCharacter::Redo()
 {
-    if(Puzzle)Puzzle->Redo();
+    if(Puzzle&&!Presentation->BlocksEditing())Puzzle->Redo();
 }
 void ASNIPCharacter::Restart()
 {
-    if(Puzzle)Puzzle->Restart();
+    if(Puzzle&&!Presentation->BlocksEditing())Puzzle->Restart();
 }
 void ASNIPCharacter::Tick(float Dt)
 {
     Super::Tick(Dt);
+    Presentation->Update(Dt);
     if(!Puzzle)return;
     FVector Center=Puzzle->GetActorLocation()+FVector(Puzzle->Dimensions)*Puzzle->Spacing*.5f;
     if(!View)Center.Z=Puzzle->GetActorLocation().Z+(Puzzle->Stage==0?250:450);
@@ -479,37 +586,97 @@ void ASNIPCharacter::Tick(float Dt)
     const float Height=(View==2?Puzzle->Dimensions.Y:Puzzle->Dimensions.Z)*Puzzle->Spacing;
     ViewCamera->SetOrthoWidth(FMath::Max(Width+550,(Height+550)*Aspect));
     FVector Target=Center-Rot.Vector()*(View?4200:5000);
-    ViewCamera->SetWorldLocation(FMath::VInterpTo(ViewCamera->GetComponentLocation(),Target,Dt,12));
-    ViewCamera->SetWorldRotation(FMath::RInterpTo(ViewCamera->GetComponentRotation(),Rot,Dt,14));
-    if(Selecting)
+    const bool Snap=Presentation->SnapCamera;
+    ViewCamera->SetWorldLocation(Snap?Target:FMath::VInterpTo(ViewCamera->GetComponentLocation(),Target,Dt,12));
+    ViewCamera->SetWorldRotation(Snap?Rot:FMath::RInterpTo(ViewCamera->GetComponentRotation(),Rot,Dt,14));
+    Presentation->SnapCamera=false;
+    ScissorFeedback=FMath::Max(0.f,ScissorFeedback-Dt*6);
+    if(Puzzle->ImpactPulse>0)
+        ViewCamera->AddWorldOffset(ViewCamera->GetRightVector()*FMath::Sin(GetWorld()->GetTimeSeconds()*120)*Puzzle->CameraShakeIntensity*Puzzle->ImpactPulse);
+    ViewCamera->PostProcessSettings.bOverride_ColorSaturation=true;
+    ViewCamera->PostProcessSettings.ColorSaturation=FVector4(View?.82f:1.f,View?.86f:1.f,View?.92f:1.f,1.f);
+    if(Selecting)UpdateSelection();
+}
+void ASNIPCharacter::UpdateSelection()
+{
+    auto* PC=Cast<APlayerController>(Controller);
+    if(!PC||!Puzzle||!Selecting)return;
+    FVector2D Mouse;
+    if(!PC->GetMousePosition(Mouse.X,Mouse.Y))return;
+    const FVector2D Delta=Mouse-DragScreen;
+    const float X=FMath::Abs(Delta.X),Y=FMath::Abs(Delta.Y);
+    if(Delta.Size()<DragThreshold){Low=High=0;return;}
+    const int HA=View==3?1:0,VA=View==2?1:2;
+    if(!AxisLocked)Axis=X>Y?HA:VA;
+    else if(Axis==HA && Y>X*DirectionHysteresis)Axis=VA;
+    else if(Axis==VA && X>Y*DirectionHysteresis)Axis=HA;
+    AxisLocked=true;
+    const FVector End=MouseWorld();
+    const int StartTile=FMath::FloorToInt((DragWorld[Axis]-Puzzle->GetActorLocation()[Axis])/Puzzle->Spacing);
+    const int EndTile=FMath::FloorToInt((End[Axis]-Puzzle->GetActorLocation()[Axis])/Puzzle->Spacing);
+    Low=FMath::Min(StartTile,EndTile);
+    High=FMath::Max(StartTile,EndTile)+1;
+}
+void ASNIPCharacter::FreezeMovement()
+{
+    if(MovementFrozen)return;
+    auto* M=GetCharacterMovement();
+    FrozenVelocity=M->Velocity;
+    FrozenMode=M->MovementMode;FrozenCustomMode=M->CustomMovementMode;
+    MovementFrozen=true;
+    M->SetComponentTickEnabled(false);
+    M->Velocity=FVector::ZeroVector;
+}
+void ASNIPCharacter::ResumeMovement()
+{
+    if(!MovementFrozen)return;
+    auto* M=GetCharacterMovement();
+    M->SetMovementMode(FrozenMode,FrozenCustomMode);
+    M->Velocity=FrozenVelocity;
+    M->SetComponentTickEnabled(true);
+    MovementFrozen=false;
+}
+float ASNIPPuzzle::CompressCoordinate(float Value,float A,float B)
+{
+    return Value<=A?Value:Value>=B?Value-(B-A):A;
+}
+FVector ASNIPPuzzle::SafePlayerPosition(FVector Desired) const
+{
+    // Find the closest non-overlapping candidate on cell faces. Conservative capsule
+    // bounds leave clearance and are deterministic, even while collision is disabled.
+    TArray<FBox> Obstacles;
+    for(const auto& C:Cells)if(C.Alive)
     {
-        FVector2D Mouse;
-        Cast<APlayerController>(Controller)->GetMousePosition(Mouse.X,Mouse.Y);
-        FVector2D Delta=Mouse-DragScreen;
-        if(!AxisLocked&&Delta.Size()>10)
+        const FVector Center=CellWorld(C.Grid),Half(Spacing*.5f);
+        Obstacles.Add(FBox(Center-Half,Center+Half));
+        TArray<USceneComponent*> AttachedParts;C.Mesh->GetChildrenComponents(true,AttachedParts);
+        for(auto* Part:AttachedParts)if(auto* Mesh=Cast<UStaticMeshComponent>(Part))
         {
-            bool Horizontal=FMath::Abs(Delta.X)>FMath::Abs(Delta.Y);
-            Axis=Horizontal?(View==3?1:0):(View==2?1:2);
-            AxisLocked=true;
-        }
-        if(AxisLocked)
-        {
-            // Reproject both endpoints through the same camera. Keeping a world
-            // start point from a moving camera incorrectly expands the band.
-            auto ProjectToPuzzle=[&](FVector2D Screen)
-            {
-                FVector Origin,Direction;
-                Cast<APlayerController>(Controller)->DeprojectScreenPositionToWorld(Screen.X,Screen.Y,Origin,Direction);
-                const int Hidden=View==1?1:View==2?2:0;
-                const float Plane=Puzzle->GetActorLocation()[Hidden]+Puzzle->Dimensions[Hidden]*Puzzle->Spacing*.5f;
-                return FMath::Abs(Direction[Hidden])>.001f?Origin+Direction*((Plane-Origin[Hidden])/Direction[Hidden]):Origin;
-            };
-            const FVector Start=ProjectToPuzzle(DragScreen),P=ProjectToPuzzle(Mouse);
-            int A=FMath::RoundToInt((Start[Axis]-Puzzle->GetActorLocation()[Axis])/Puzzle->Spacing),B=FMath::RoundToInt((P[Axis]-Puzzle->GetActorLocation()[Axis])/Puzzle->Spacing);
-            Low=FMath::Min(A,B);
-            High=FMath::Max(A,B);
+            const FVector At=Center+Mesh->GetComponentLocation()-C.Mesh->GetComponentLocation();
+            const FVector Extent=Mesh->CalcBounds(Mesh->GetComponentTransform()).BoxExtent;
+            Obstacles.Add(FBox(At-Extent,At+Extent));
         }
     }
+    auto Clear=[&](const FVector& Q)
+    {
+        for(const auto& Box:Obstacles)
+        {
+            const FVector D=(Q-Box.GetCenter()).GetAbs(),Extent=Box.GetExtent()+FVector(34,34,88);
+            if(D.X<Extent.X && D.Y<Extent.Y && D.Z<Extent.Z)return false;
+        }
+        return true;
+    };
+    if(Clear(Desired))return Desired;
+    FVector Best=Desired;
+    float Distance=TNumericLimits<float>::Max();
+    for(const auto& Box:Obstacles)for(int Axis=0;Axis<3;++Axis)for(float Sign:{1.f,-1.f})
+    {
+        FVector Candidate=Desired;
+        Candidate[Axis]=Box.GetCenter()[Axis]+Sign*(Box.GetExtent()[Axis]+(Axis==2?90:36));
+        const float D=FVector::DistSquared(Candidate,Desired);
+        if(D<Distance && Clear(Candidate)){Best=Candidate;Distance=D;}
+    }
+    return Best;
 }
 void ASNIPHUD::DrawHUD()
 {
@@ -523,22 +690,13 @@ void ASNIPHUD::DrawHUD()
     {
         DrawText(T,C,X,Y,GEngine->GetLargeFont(),Size*S*2);
     };
-    DrawRect(FLinearColor(.97f,.94f,.84f,.93f),18,18,W-36,70*S);
-    Text(TEXT("SNIP!"),36,28,1.8f,Ink);
-    Text(G->Title(),200*S,37,1,Ink);
-    Text(P->View==0?TEXT("1  PLAY     2  FRONT     3  TOP     4  SIDE"):P->View==1?TEXT("FRONT / X + Z"):P->View==2?TEXT("TOP / X + Y"):TEXT("SIDE / Y + Z"),36,105*S,.85f,Ink);
-    DrawRect(FLinearColor(.97f,.94f,.84f,.94f),18,H-115*S,W-36,96*S);
-    Text(P->View?TEXT("DRAG a band / RELEASE to lock / CLICK to snip / RMB cancel / 1 play"):TEXT("WASD walk / SPACE jump / 2 3 4 inspect & cut"),36,H-100*S,.75f,Ink);
-    Text(FString::Printf(TEXT("Z undo (%d)   Y redo (%d)   R restart     %s"),G->Cursor,G->History.Num()-G->Cursor,*G->Notice),36,H-62*S,.66f,Ink);
-    FString Hint=G->Stage==0?TEXT("Try TOP view. Remove the empty columns between the two islands."):G->Stage==1?TEXT("Try FRONT view. Snip paper layers below the steel platform."):TEXT("Width, depth AND height. Inspect TOP, then FRONT to connect the paper route.");
-    Text(Hint,36,140*S,.72f,Ink);
     auto Project=[&](FVector V)
     {
         FVector2D O;
         GetOwningPlayerController()->ProjectWorldLocationToScreen(V,O);
         return O;
     };
-    if(P->View)
+    if(P->View&&!P->Presentation->MenuOpen&&!P->Presentation->TransitionActive)
     {
         const int HA=P->View==3?1:0,VA=P->View==2?1:2;
         // A fine graph-paper grid makes selectable intervals visible even in empty space.
@@ -554,7 +712,7 @@ void ASNIPHUD::DrawHUD()
         if((P->Selecting||P->Locked)&&P->Low<P->High)
         {
             FString Why=G->ValidateCut(P->Axis,P->Low,P->High);
-            FLinearColor C=Why.IsEmpty()?Mint:Coral;
+            FLinearColor C=Why.IsEmpty()?FLinearColor(.851f,.471f,.259f):Coral;
             FVector B=G->GetActorLocation(),E=B;
             B[P->Axis]+=P->Low*G->Spacing;
             E[P->Axis]+=P->High*G->Spacing;
@@ -562,7 +720,7 @@ void ASNIPHUD::DrawHUD()
             E[Other]+=G->Dimensions[Other]*G->Spacing;
             auto Q=Project(B),R=Project(E);
             float X=FMath::Min(Q.X,R.X),Y=FMath::Min(Q.Y,R.Y),RW=FMath::Abs(Q.X-R.X),RH=FMath::Abs(Q.Y-R.Y);
-            DrawRect(FLinearColor(C.R,C.G,C.B,.23f),X,Y,RW,RH);
+            DrawRect(FLinearColor(C.R,C.G,C.B,.18f+.05f*FMath::Sin(GetWorld()->GetTimeSeconds()*8)),X,Y,RW,RH);
             for(float n=0; n<RW; n+=20)
             {
                 DrawLine(X+n,Y,X+FMath::Min(n+10,RW),Y,C,2);
@@ -573,7 +731,24 @@ void ASNIPHUD::DrawHUD()
                 DrawLine(X,Y+n,X,Y+FMath::Min(n+10,RH),C,2);
                 DrawLine(X+RW,Y+n,X+RW,Y+FMath::Min(n+10,RH),C,2);
             }
-            Text(FString::Printf(TEXT("%s [%d, %d) / %d cells   %s"),P->Axis==0?TEXT("X"):P->Axis==1?TEXT("Y"):TEXT("Z"),P->Low,P->High,P->High-P->Low,Why.IsEmpty()?TEXT("READY TO SNIP"):*Why),36,175*S,.8f,C);
+
+            TSet<FIntPoint> GhostTiles;
+            if(Why.IsEmpty())for(const auto& Cell:G->Cells)if(Cell.Alive && Cell.Grid[P->Axis]>=P->High)
+            {
+                FVector Center=G->CellWorld(Cell.Grid);
+                Center[P->Axis]=ASNIPPuzzle::CompressCoordinate(Center[P->Axis],G->GetActorLocation()[P->Axis]+P->Low*G->Spacing,G->GetActorLocation()[P->Axis]+P->High*G->Spacing);
+                const FIntPoint Tile(FMath::RoundToInt(Center[HA]/G->Spacing),FMath::RoundToInt(Center[VA]/G->Spacing));
+                if(GhostTiles.Contains(Tile))continue;
+                GhostTiles.Add(Tile);
+                FVector GhostMin=Center,GhostMax=Center;
+                GhostMin[HA]-=G->Spacing*.48f; GhostMin[VA]-=G->Spacing*.48f;
+                GhostMax[HA]+=G->Spacing*.48f; GhostMax[VA]+=G->Spacing*.48f;
+                const auto U=Project(GhostMin),V=Project(GhostMax);
+                FLinearColor Ghost(.1f,.72f,.85f,.9f);
+                DrawRect(FLinearColor(.10f,.65f,.80f,.50f),FMath::Min(U.X,V.X),FMath::Min(U.Y,V.Y),FMath::Abs(U.X-V.X),FMath::Abs(U.Y-V.Y));
+                DrawLine(U.X,U.Y,V.X,U.Y,Ghost,1);DrawLine(V.X,U.Y,V.X,V.Y,Ghost,1);
+                DrawLine(V.X,V.Y,U.X,V.Y,Ghost,1);DrawLine(U.X,V.Y,U.X,U.Y,Ghost,1);
+            }
         }
         float MX=0,MY=0;
         GetOwningPlayerController()->GetMousePosition(MX,MY);
@@ -582,7 +757,8 @@ void ASNIPHUD::DrawHUD()
         {
             return FVector2D(MX+FMath::Cos(Angle)*x-FMath::Sin(Angle)*y,MY+FMath::Sin(Angle)*x+FMath::Cos(Angle)*y);
         };
-        float Spread=G->Busy?3:12;
+        float Spread=P->Selecting?20:FMath::Lerp(10.f,1.f,P->ScissorFeedback);
+        if(P->Rejected)MX+=FMath::Sin(GetWorld()->GetTimeSeconds()*90)*6*P->ScissorFeedback;
         for(float Side:{-1.f,1.f})
         {
             auto A=V(5,Side*3),B=V(40,Side*Spread);
@@ -596,12 +772,17 @@ void ASNIPHUD::DrawHUD()
         }
     }
     auto Exit=Project(G->ExitPosition+FVector(0,0,160));
-    Text(TEXT("EXIT"),Exit.X-24,Exit.Y,.8f,Mint);
-    if(G->Complete)
+    if(G->ImpactPulse>0)
     {
-        DrawRect(FLinearColor(.97f,.94f,.84f,.96f),W*.25f,H*.4f,W*.5f,110*S);
-        Text(G->Stage==2?TEXT("PERFECT CUT!  ALL DONE."):TEXT("PERFECT CUT!"),W*.3f,H*.43f,1.5f,Ink);
+        const auto At=Project(G->Seam);
+        const float Age=1-G->ImpactPulse;
+        for(int i=0;i<FMath::Clamp(G->ImpactParticleCount,0,64);++i)
+        {
+            const float Angle=i*2.39996f;
+            DrawRect(FLinearColor(.97f,.8f,.5f,G->ImpactPulse),At.X+FMath::Cos(Angle)*Age*95,At.Y+FMath::Sin(Angle)*Age*55+Age*Age*25,4,2);
+        }
     }
+    P->Presentation->Draw(this,Canvas);
 }
 ASNIPGameMode::ASNIPGameMode()
 {

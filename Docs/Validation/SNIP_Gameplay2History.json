@@ -1,0 +1,159 @@
+[
+  {
+    "name": "Saved decoration cannot block the pawn",
+    "passed": true,
+    "count": 7
+  },
+  {
+    "name": "WASD actually moves character",
+    "passed": true,
+    "distance": 234.6855778675365
+  },
+  {
+    "name": "Walk animation remains inside capsule",
+    "passed": true,
+    "offset": "<Struct 'Vector' (0x000001ACE8418C40) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Released movement stops",
+    "passed": true,
+    "distance": 0.0
+  },
+  {
+    "name": "Standing jump sample 0",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001ACE8418100) {x: 300.000000, y: 500.000000, z: 332.312667}>",
+    "offset": "<Struct 'Vector' (0x000001ACE8394C90) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 1",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001ACE8394C90) {x: 300.000000, y: 500.000000, z: 382.812953}>",
+    "offset": "<Struct 'Vector' (0x000001ACE8394AB0) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 2",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001ACE8394AB0) {x: 300.000000, y: 500.000000, z: 426.779944}>",
+    "offset": "<Struct 'Vector' (0x000001ACA976C790) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 3",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001ACA976C790) {x: 300.000000, y: 500.000000, z: 464.213325}>",
+    "offset": "<Struct 'Vector' (0x000001ACE8343350) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 4",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001ACE8343350) {x: 300.000000, y: 500.000000, z: 488.000882}>",
+    "offset": "<Struct 'Vector' (0x000001ACE8343080) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 5",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001ACE8343080) {x: 300.000000, y: 500.000000, z: 514.000833}>",
+    "offset": "<Struct 'Vector' (0x000001ACE8343440) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 6",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001ACE8343440) {x: 300.000000, y: 500.000000, z: 533.467343}>",
+    "offset": "<Struct 'Vector' (0x000001ACE8343A80) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 7",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001ACE8343A80) {x: 300.000000, y: 500.000000, z: 546.400482}>",
+    "offset": "<Struct 'Vector' (0x000001ACE8343FD0) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 8",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001ACE8343FD0) {x: 300.000000, y: 500.000000, z: 551.812768}>",
+    "offset": "<Struct 'Vector' (0x000001ACE8343170) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 9",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001ACE8343170) {x: 300.000000, y: 500.000000, z: 553.312392}>",
+    "offset": "<Struct 'Vector' (0x000001ACE83438A0) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump rises and lands vertically",
+    "passed": true,
+    "peak": 263.1623878215522
+  },
+  {
+    "name": "Empty bridge slab valid",
+    "passed": true
+  },
+  {
+    "name": "History cut accepted 1",
+    "passed": true
+  },
+  {
+    "name": "History cut accepted 0",
+    "passed": true
+  },
+  {
+    "name": "History cut accepted 2",
+    "passed": true
+  },
+  {
+    "name": "Multi undo exact 0",
+    "passed": true
+  },
+  {
+    "name": "Multi undo exact 1",
+    "passed": true
+  },
+  {
+    "name": "Multi undo exact 2",
+    "passed": true
+  },
+  {
+    "name": "Multi redo exact 0",
+    "passed": true
+  },
+  {
+    "name": "Multi redo exact 1",
+    "passed": true
+  },
+  {
+    "name": "Multi redo exact 2",
+    "passed": true
+  },
+  {
+    "name": "Overlap recovery fixture cut accepted",
+    "passed": true
+  },
+  {
+    "name": "Undo overlap resolves locally above paper",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x000001ACE7097940) {x: 300.000000, y: 300.000000, z: 290.000000}>"
+  },
+  {
+    "name": "Recovered capsule stands without collision ejection",
+    "passed": true
+  },
+  {
+    "name": "History and reset cannot corrupt active animation",
+    "passed": true
+  },
+  {
+    "name": "Anticipation moves opposite compression",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x000001ACE8343E90) {x: 1905.333440, y: 100.000000, z: 100.000000}>"
+  },
+  {
+    "name": "Compression accelerates toward impact",
+    "passed": true,
+    "early_distance": 213.46280226111412,
+    "late_distance": 627.8735212087631
+  },
+  {
+    "name": "Impact ends exactly on grid",
+    "passed": true
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Tutorial prop module can be removed",
+    "passed": true
+  },
+  {
+    "name": "Restored obstacle resolves overlap nearby",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000021439A2E220) {x: 500.000000, y: 500.000000, z: 350.000001}>"
+  },
+  {
+    "name": "Restored obstacle supports performer",
+    "passed": true
+  }
+]

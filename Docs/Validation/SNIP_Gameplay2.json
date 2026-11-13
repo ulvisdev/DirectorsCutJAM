@@ -1,0 +1,238 @@
+[
+  {
+    "name": "Native pawn and HUD integrated",
+    "passed": true
+  },
+  {
+    "name": "Inclusive endpoints view 1 axis 0",
+    "passed": true,
+    "interval": [
+      4,
+      9
+    ]
+  },
+  {
+    "name": "Release immediately cuts view 1 axis 0",
+    "passed": true
+  },
+  {
+    "name": "Inclusive endpoints view 2 axis 0",
+    "passed": true,
+    "interval": [
+      4,
+      9
+    ]
+  },
+  {
+    "name": "Release immediately cuts view 2 axis 0",
+    "passed": true
+  },
+  {
+    "name": "Inclusive endpoints view 3 axis 2",
+    "passed": true,
+    "interval": [
+      2,
+      4
+    ]
+  },
+  {
+    "name": "Release immediately cuts view 3 axis 2",
+    "passed": true
+  },
+  {
+    "name": "Inclusive endpoints view 2 axis 1",
+    "passed": true,
+    "interval": [
+      3,
+      7
+    ]
+  },
+  {
+    "name": "Release immediately cuts view 2 axis 1",
+    "passed": true
+  },
+  {
+    "name": "Direction switches during drag",
+    "passed": true
+  },
+  {
+    "name": "RMB suppresses release",
+    "passed": true
+  },
+  {
+    "name": "Deliberate one-cell interval",
+    "passed": true
+  },
+  {
+    "name": "One-cell release cuts",
+    "passed": true
+  },
+  {
+    "name": "Cut through performer accepted",
+    "passed": true
+  },
+  {
+    "name": "Performer survives and is mapped safely",
+    "passed": true
+  },
+  {
+    "name": "Undo preserves current valid position",
+    "passed": true
+  },
+  {
+    "name": "Redo preserves current valid position",
+    "passed": true
+  },
+  {
+    "name": "New cut clears redo branch",
+    "passed": true
+  },
+  {
+    "name": "Metal rejected",
+    "passed": true
+  },
+  {
+    "name": "Metal translates above paper cut",
+    "passed": true
+  },
+  {
+    "name": "Metal survives at exact lowered grid",
+    "passed": true
+  },
+  {
+    "name": "Airborne edit freezes position",
+    "passed": true
+  },
+  {
+    "name": "Airborne edit restores velocity",
+    "passed": true
+  },
+  {
+    "name": "Removing player support accepted",
+    "passed": true
+  },
+  {
+    "name": "Deleted support resumes gravity",
+    "passed": true
+  },
+  {
+    "name": "Measured timestep near target 30 FPS",
+    "passed": true,
+    "delta_seconds": 0.03333349898457527
+  },
+  {
+    "name": "Exact final geometry at 30 FPS",
+    "passed": true
+  },
+  {
+    "name": "Measured timestep near target 60 FPS",
+    "passed": true,
+    "delta_seconds": 0.016666799783706665
+  },
+  {
+    "name": "Exact final geometry at 60 FPS",
+    "passed": true
+  },
+  {
+    "name": "Measured timestep near target 120 FPS",
+    "passed": true,
+    "delta_seconds": 0.009274400770664215
+  },
+  {
+    "name": "Exact final geometry at 120 FPS",
+    "passed": true
+  },
+  {
+    "name": "Puzzle 1 solution accepted",
+    "passed": true
+  },
+  {
+    "name": "Puzzle 1 completed by walking",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x000001AC2C1286F0) {x: 990.706485, y: 500.000000, z: 290.150008}>"
+  },
+  {
+    "name": "Puzzle 2 automatic progression",
+    "passed": true
+  },
+  {
+    "name": "Puzzle 2 solution accepted",
+    "passed": true
+  },
+  {
+    "name": "Jump onto paper step",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x000001AC2C128830) {x: 765.660842, y: 500.000000, z: 490.150004}>"
+  },
+  {
+    "name": "Jump onto lowered metal",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x000001AC2C128830) {x: 995.117326, y: 500.000000, z: 690.149998}>"
+  },
+  {
+    "name": "Puzzle 2 exit reached through physics",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x000001AC2C1286F0) {x: 1186.800613, y: 500.000000, z: 690.149998}>"
+  },
+  {
+    "name": "Puzzle 3 automatic progression",
+    "passed": true
+  },
+  {
+    "name": "Puzzle 3 Y cut accepted",
+    "passed": true
+  },
+  {
+    "name": "Puzzle 3 X cut accepted",
+    "passed": true
+  },
+  {
+    "name": "Puzzle 3 Z cut accepted",
+    "passed": true
+  },
+  {
+    "name": "Final paper step reachable",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x000001ACE837AA90) {x: 565.280229, y: 913.828257, z: 490.150007}>"
+  },
+  {
+    "name": "Final metal platform reachable",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x000001ACE8378FB0) {x: 787.338586, y: 892.401790, z: 690.150000}>"
+  },
+  {
+    "name": "Final PERFECT CUT state",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x000001ACE8378FB0) {x: 787.338586, y: 892.401790, z: 690.150000}>"
+  },
+  {
+    "name": "Trapdoor solution cut",
+    "passed": true
+  },
+  {
+    "name": "Trapdoor exit reached by falling",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x000001ACE8378470) {x: 1481.774228, y: 500.000000, z: 290.150004}>"
+  },
+  {
+    "name": "Progresses to fifth puzzle",
+    "passed": true
+  },
+  {
+    "name": "Riding island lower cut",
+    "passed": true
+  },
+  {
+    "name": "Player carried with surviving island",
+    "passed": true
+  },
+  {
+    "name": "Riding island depth cut",
+    "passed": true
+  },
+  {
+    "name": "Fifth puzzle completed by walking and falling",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x000001ACE837AA90) {x: 1900.000000, y: 956.196898, z: 290.149999}>"
+  }
+]

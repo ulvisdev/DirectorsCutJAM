@@ -1,0 +1,20 @@
+{
+  "project": "DirectorsCutJAM",
+  "world": "/Game/SNIP/LV_SNIP_Prototype.LV_SNIP_Prototype",
+  "game_mode": "/Script/DirectorsCutJAM.SNIPGameMode",
+  "puzzle_actor": "/Game/SNIP/LV_SNIP_Prototype.LV_SNIP_Prototype:PersistentLevel.SNIPPuzzle_0",
+  "stage": 0,
+  "paper_material": "/Game/SNIP/Cinematic/Materials/M_SNIP_Paper.M_SNIP_Paper",
+  "metal_material": "/Game/SNIP/Cinematic/Materials/M_SNIP_Metal.M_SNIP_Metal",
+  "material_assets": [
+    "/Game/SNIP/Cinematic/Materials/M_SNIP_Cardboard.M_SNIP_Cardboard",
+    "/Game/SNIP/Cinematic/Materials/M_SNIP_CardboardEdge.M_SNIP_CardboardEdge",
+    "/Game/SNIP/Cinematic/Materials/M_SNIP_CutSelection.M_SNIP_CutSelection",
+    "/Game/SNIP/Cinematic/Materials/M_SNIP_Ghost.M_SNIP_Ghost",
+    "/Game/SNIP/Cinematic/Materials/M_SNIP_InvalidCut.M_SNIP_InvalidCut",
+    "/Game/SNIP/Cinematic/Materials/M_SNIP_Metal.M_SNIP_Metal",
+    "/Game/SNIP/Cinematic/Materials/M_SNIP_Paper.M_SNIP_Paper"
+  ],
+  "decoration_collision_disabled": true,
+  "player_start_present": true
+}

@@ -1,0 +1,124 @@
+Log started at 11/13/2026 21:39:28 (2026-11-13T21:39:28Z)
+Resolved project argument C:/Users/ulvis/Desktop/GameProjects/UnrealEngine/DirectorsCutJAM/DirectorsCutJAM.uproject to C:\Users\ulvis\Desktop\GameProjects\UnrealEngine\DirectorsCutJAM\DirectorsCutJAM.uproject
+No config file at C:\ProgramData\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\ulvis\AppData\Local\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\ulvis\Documents\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Configuration will be read from:
+  C:\Users\ulvis\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (C:\Users\ulvis\Desktop\GameProjects\UnrealEngine\DirectorsCutJAM\Intermediate\Build\XmlConfigCache.bin): C:\Users\ulvis\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (C:\Users\ulvis\Desktop\GameProjects\UnrealEngine\DirectorsCutJAM\Intermediate\Build\XmlConfigCache.bin): C:\Users\ulvis\Desktop\GameProjects\UnrealEngine\DirectorsCutJAM\Saved\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (C:\Users\ulvis\Desktop\GameProjects\UnrealEngine\DirectorsCutJAM\Intermediate\Build\XmlConfigCache.bin): C:\Users\ulvis\AppData\Local\UnrealEngine\Intermediate\Build\UnrealBuildTool.Env.BuildConfiguration.xml
+Setting temp directory to 'C:\Users\ulvis\AppData\Local\Temp\UnrealBuildTool\eb6d2d82'
+    Registering build platform: UnrealBuildTool.AndroidPlatformFactory
+    Registering build platform: UnrealBuildTool.IOSPlatformFactory
+    Registering build platform: UnrealBuildTool.LinuxPlatformFactory
+    Registering build platform: UnrealBuildTool.MacPlatformFactory
+    Registering build platform: UnrealBuildTool.TVOSPlatformFactory
+    Registering build platform: UnrealBuildTool.WindowsPlatformFactory
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (1)
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (2)
+Found Windows 10 SDK version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Found Universal CRT version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Win64 Installed SDK(s): MinVersion_Sdk=10.0.19041.0, MaxVersion_Sdk=10.9.99999.0, CurrentVersion_Sdk=10.0.26100.0, Version_AutoSdk=10.0.22621.0, CurrentVersion_AutoSdk=
+        Registering build platform: Win64 - buildable: True
+    Registering build platform: UnrealBuildTool.VisionOSPlatformFactory
+Command line: "C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" DirectorsCutJAMEditor Win64 Development -Project=C:/Users/ulvis/Desktop/GameProjects/UnrealEngine/DirectorsCutJAM/DirectorsCutJAM.uproject -WaitMutex -NoHotReloadFromIDE -NoLiveCoding
+Log file: C:\Users\ulvis\AppData\Local\UnrealBuildTool\Log.txt
+Deleting old log file: C:\Users\ulvis\AppData\Local\UnrealBuildTool\Log-backup-2026.11.11-00.44.30.txt
+Deleting old log file: C:\Users\ulvis\AppData\Local\UnrealBuildTool\Log-backup-2026.11.11-00.44.30.json
+
+Determining max actions to execute in parallel (8 physical cores, 16 logical cores)
+  Executing up to 8 processes, one per physical core
+  Requested 1.5 GB memory per action, 2.82 GB available: limiting max parallel actions to 1
+Using 'git status' to determine working set for adaptive non-unity build (C:\Users\ulvis\Desktop\GameProjects\UnrealEngine\DirectorsCutJAM).
+UbaStorageServer - Database loaded from C:\ProgramData\Epic\UnrealBuildAccelerator\cas\casdb (v32) in 1ms (contained 0 entries estimated to 0b)
+UbaServer - Listening on 0.0.0.0:1345
+Skipping C:\Program Files\Epic Games\UE_5.8\Engine\Intermediate\Build\BuildRules\UE5Rules.dll: File is installed
+Skipping C:\Program Files\Epic Games\UE_5.8\Engine\Intermediate\Build\BuildRules\UE5ProgramRules.dll: File is installed
+Available x64 toolchains (1):
+ * C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231
+    (Family=14.51.36231, FamilyRank=2, Version=14.51.36260, HostArchitecture=x64, ReleaseChannel=Latest, Architecture=x64)
+Visual Studio compiler version 14.51.36260 is newer than latest preferred version 14.50.35717. Please use caution as this compiler has not been heavily tested
+Building UnrealEditor - DirectorsCutJAMEditor - Win64 - Development
+Generated code is up to date.
+Deleting outdated item: C:\Users\ulvis\Desktop\GameProjects\UnrealEngine\DirectorsCutJAM\Binaries\Win64\UnrealEditor-DirectorsCutJAM.pdb
+Deleting outdated item: C:\Users\ulvis\Desktop\GameProjects\UnrealEngine\DirectorsCutJAM\Intermediate\Build\Win64\x64\UnrealEditor\Development\DirectorsCutJAM\UnrealEditor-DirectorsCutJAM.lib
+Building DirectorsCutJAMEditor...
+===== Toolchain Information =====
+Using ISPC compiler (C:\Program Files\Epic Games\UE_5.8\Engine\Source\ThirdParty\Intel\ISPC\bin\Windows\ispc.exe)
+  Intel(r) Implicit SPMD Program Compiler (Intel(r) ISPC), 1.24.0 (build commit  @ 20250404, LLVM 18.1.2) 
+Using Visual Studio 14.51.36260 toolchain (C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231) and Windows 10.0.26100.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+Warning: Visual Studio compiler 14.51.36260 is not a preferred version
+[Upgrade]
+[Upgrade] Using backward-compatible include order. The latest version of UE has changed the order of includes, which may require code changes. The current setting is:
+[Upgrade]     IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_6
+[Upgrade] Suppress this message by setting 'IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_8;' in DirectorsCutJAMEditor.Target.cs.
+[Upgrade] Alternatively you can set this to 'EngineIncludeOrderVersion.Latest' to always use the latest include order. This will potentially cause compile errors when integrating new versions of the engine.
+[Upgrade]
+=================================
+Using Unreal Build Accelerator local executor to run 4 action(s)
+  CPU 8 physical cores, 16 logical cores
+  Memory 31.31 GB physical, 37.38 GB/49.31 GB committed
+  UBA Storage capacity 40 GB
+  UBA RootDir C:\ProgramData\Epic\UnrealBuildAccelerator
+Cache bucket 3261815873 used. Action: Compile [x64] SNIPPresentation.cpp ()
+Cache bucket 416513229 used. Action: Link [x64] UnrealEditor-DirectorsCutJAM.dll ()
+All processes queued
+[1/4] Compile [x64] SNIPPresentation.cpp
+C:\Program Files\Epic Games\UE_5.8\Engine\Source\Runtime\Engine\Classes\GameFramework\Character.h(798,31): warning C4996: 'APawn::GetMovementBase': GetMovementBase is deprecated. Use GetMovementBaseObject or GetMovementBaseInterfaceData instead. - Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
+	virtual UPrimitiveComponent* GetMovementBase() const override final { return Cast<UPrimitiveComponent>(GetMovementBaseObject()); }
+	                             ^
+[2/4] Link [x64] UnrealEditor-DirectorsCutJAM.dll
+[3/4] Link [x64] UnrealEditor-DirectorsCutJAM.lib
+[4/4] WriteMetadata DirectorsCutJAMEditor.target [NoUba]
+
+Total time in Unreal Build Accelerator local executor: 12.06 seconds
+Output binary: C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor.exe
+UbaStorageServer - Database saved in 1ms (0 file entries, 0 cas entries. deleted 0 dropped cas files)
+WriteFileIfChanged() wrote 0 changed files of 1 requested writes.
+
+Timeline:
+[  0.000]  +0.537 Main
+   0.021          [  0.021]  +0.130 Apply XmlConfig
+   0.154          [  0.154]  +0.172 AddTelemetry
+   0.363          [  0.363]  +0.173 RegisterPlatforms
+[  0.607]  +0.050 ParseCommandLine
+[  0.738]  +0.251 LoadMakefile
+   0.782          [  0.043]  +0.489 EngineRulesPlugins
+   0.782             0.043          [  0.000]  +0.252 <unknown>
+   1.035             0.296          [  0.252]  +0.000 FindPlugins
+   1.067             0.328          [  0.284]  +0.055 MakefileValid
+[  0.990]  +0.283 <unknown>
+[  1.274]  +0.004 EngineRulesFetchDirs
+[  1.285]  +0.018 EngineRulesAssembly
+[  1.303]  +0.002 ProgramRulesAssembly
+[  1.306]  +0.031 ProjectRulesAssembly
+[  1.338]  +0.289 CreateTargetRules
+[  1.687]  +0.011 CppDependencyCache
+[  1.710]  +0.301 DirectorsCutJAMEditor Win64 Development
+[  2.012]  +0.044 UHTWait
+   2.014          [  0.001]  +0.039 UHTManifest
+   2.054          [  0.041]  +0.022 UHTTimestamps
+[  2.084]  +0.009 CppDependencyCache
+[  2.094]  +0.091 Preparing ActionGraph
+   2.105          [  0.011]  +0.005 LinkActions
+   2.110             0.015          [  0.004]  +0.000 DetectActionGraphCycles
+   2.111          [  0.016]  +0.000 GatherPrerequisiteActions
+   2.112          [  0.018]  +0.000 CppDependencyCacheWait
+   2.113          [  0.018]  +0.058 GatherOutdatedActions
+   2.174          [  0.080]  +0.007 LinkActions
+   2.174             0.080          [  0.000]  +0.000 DetectActionGraphCycles
+   2.182          [  0.088]  +0.001 DeleteOutdatedProducedItems
+   2.184          [  0.090]  +0.000 SaveActionHistory
+   2.185          [  0.091]  +0.000 CreateDirectoriesForProducedItems
+[  2.197]  +0.073 GarbageCollect
+[  2.271] +11.992 <unknown>
+[ 14.263]  +0.000 Deploying targets
+[ 14.265]  +0.000 DisconnectCache
+[ 14.268]  +0.012 SaveCasTable
+[ 14.283]  +0.055 Saving caches
+[ 14.340]  +0.002 TelemetryService.FlushEvents
+[ 14.344]
+
+Result: Succeeded
+Total execution time: 14.34 seconds

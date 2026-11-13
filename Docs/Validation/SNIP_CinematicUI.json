@@ -1,0 +1,114 @@
+[
+  {
+    "name": "Title available after full film",
+    "passed": true
+  },
+  {
+    "name": "Mouse target delivered",
+    "passed": true,
+    "target": [
+      674.0,
+      650.56
+    ],
+    "actual": "(674.0, 650.0)",
+    "viewport": "(1348, 1222)"
+  },
+  {
+    "name": "Mouse opens Controls",
+    "passed": true
+  },
+  {
+    "name": "Mouse target delivered",
+    "passed": true,
+    "target": [
+      674.0,
+      1058.92
+    ],
+    "actual": "(674.0, 1058.0)",
+    "viewport": "(1348, 1222)"
+  },
+  {
+    "name": "Mouse Back from Controls",
+    "passed": true
+  },
+  {
+    "name": "Mouse target delivered",
+    "passed": true,
+    "target": [
+      674.0,
+      706.56
+    ],
+    "actual": "(674.0, 706.0)",
+    "viewport": "(1348, 1222)"
+  },
+  {
+    "name": "Mouse opens Settings",
+    "passed": true
+  },
+  {
+    "name": "Mouse target delivered",
+    "passed": true,
+    "target": [
+      674.0,
+      706.56
+    ],
+    "actual": "(674.0, 706.0)",
+    "viewport": "(1348, 1222)"
+  },
+  {
+    "name": "Skip tutorial available in settings",
+    "passed": true
+  },
+  {
+    "name": "Mouse target delivered",
+    "passed": true,
+    "target": [
+      674.0,
+      762.56
+    ],
+    "actual": "(674.0, 762.0)",
+    "viewport": "(1348, 1222)"
+  },
+  {
+    "name": "Mouse target delivered",
+    "passed": true,
+    "target": [
+      674.0,
+      594.56
+    ],
+    "actual": "(674.0, 594.0)",
+    "viewport": "(1348, 1222)"
+  },
+  {
+    "name": "Mouse Play starts new film",
+    "passed": true
+  },
+  {
+    "name": "Ghost preview leaves logical state unchanged",
+    "passed": true
+  },
+  {
+    "name": "Cancel still suppresses release",
+    "passed": true
+  },
+  {
+    "name": "Editing cannot accidentally trigger death",
+    "passed": true
+  },
+  {
+    "name": "Returning to play below boundary resets once",
+    "passed": true
+  },
+  {
+    "name": "Repeated deaths offer restart hint",
+    "passed": true
+  },
+  {
+    "name": "R key restores active puzzle and gameplay view",
+    "passed": true
+  },
+  {
+    "name": "Contextual hints expire",
+    "passed": true
+  }
+]

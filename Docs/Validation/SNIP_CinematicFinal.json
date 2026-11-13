@@ -1,0 +1,211 @@
+[
+  {
+    "name": "Title menu integrated",
+    "passed": true
+  },
+  {
+    "name": "Menu freezes performer",
+    "passed": true
+  },
+  {
+    "name": "Keyboard opens controls",
+    "passed": true
+  },
+  {
+    "name": "Settings navigation",
+    "passed": true
+  },
+  {
+    "name": "Shake setting functional",
+    "passed": true
+  },
+  {
+    "name": "PLAY closes menu",
+    "passed": true
+  },
+  {
+    "name": "First movement prompt only",
+    "passed": true
+  },
+  {
+    "name": "Movement advances tutorial",
+    "passed": true
+  },
+  {
+    "name": "Jump advances tutorial",
+    "passed": true
+  },
+  {
+    "name": "Gap card freezes movement",
+    "passed": true
+  },
+  {
+    "name": "Required key works through blocking card",
+    "passed": true
+  },
+  {
+    "name": "Tutorial cut uses real release interaction",
+    "passed": true
+  },
+  {
+    "name": "Return to film completes tutorial",
+    "passed": true
+  },
+  {
+    "name": "No permanent normal-play prompt",
+    "passed": true
+  },
+  {
+    "name": "Manual restart preserves learned tutorial",
+    "passed": true
+  },
+  {
+    "name": "Grounded switch preserves position 1",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000021439DA26D0) {x: 300.000000, y: 500.000000, z: 290.000000}>"
+  },
+  {
+    "name": "Grounded switch preserves position 2",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000021439DA26D0) {x: 300.000000, y: 500.000000, z: 290.000000}>"
+  },
+  {
+    "name": "Grounded switch preserves position 3",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000021439DA26D0) {x: 300.000000, y: 500.000000, z: 290.000000}>"
+  },
+  {
+    "name": "Grounded switch preserves position 0",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000021439DA26D0) {x: 300.000000, y: 500.000000, z: 290.000000}>"
+  },
+  {
+    "name": "Grounded resume remains Walking",
+    "passed": true
+  },
+  {
+    "name": "Grounded switch preserves position 3",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000021439DA26D0) {x: 300.000000, y: 500.000000, z: 290.000000}>"
+  },
+  {
+    "name": "Grounded switch preserves position 1",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000021439DA26D0) {x: 300.000000, y: 500.000000, z: 290.000000}>"
+  },
+  {
+    "name": "Grounded switch preserves position 2",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000021439DA26D0) {x: 300.000000, y: 500.000000, z: 290.000000}>"
+  },
+  {
+    "name": "Grounded switch preserves position 0",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000021439DA26D0) {x: 300.000000, y: 500.000000, z: 290.000000}>"
+  },
+  {
+    "name": "Grounded resume remains Walking",
+    "passed": true
+  },
+  {
+    "name": "Airborne edit remains stationary 2",
+    "passed": true
+  },
+  {
+    "name": "Airborne edit remains stationary 3",
+    "passed": true
+  },
+  {
+    "name": "Airborne edit remains stationary 1",
+    "passed": true
+  },
+  {
+    "name": "Airborne resume keeps upward momentum",
+    "passed": true
+  },
+  {
+    "name": "History still restores exact edited grid",
+    "passed": true
+  },
+  {
+    "name": "Fall begins covered reset",
+    "passed": true
+  },
+  {
+    "name": "Death resets geometry history and entrance",
+    "passed": true
+  },
+  {
+    "name": "Death cleared undo history",
+    "passed": true
+  },
+  {
+    "name": "Death does not replay tutorial",
+    "passed": true
+  },
+  {
+    "name": "Pause opens",
+    "passed": true
+  },
+  {
+    "name": "Pause shares controls panel",
+    "passed": true
+  },
+  {
+    "name": "Pause resumes movement",
+    "passed": true
+  },
+  {
+    "name": "Exit seamlessly advances scene",
+    "passed": true
+  },
+  {
+    "name": "Metal still rejects",
+    "passed": true
+  },
+  {
+    "name": "Brief metal feedback",
+    "passed": true
+  },
+  {
+    "name": "Second course still traversable",
+    "passed": true
+  },
+  {
+    "name": "Third course still traversable",
+    "passed": true
+  },
+  {
+    "name": "Trapdoor progresses seamlessly",
+    "passed": true
+  },
+  {
+    "name": "Final scene returns to title",
+    "passed": true
+  },
+  {
+    "name": "Title available after full film",
+    "passed": true
+  },
+  {
+    "name": "Mouse opens Controls",
+    "passed": true
+  },
+  {
+    "name": "Mouse Back from Controls",
+    "passed": false
+  },
+  {
+    "name": "Tutorial prop module can be removed",
+    "passed": false
+  },
+  {
+    "name": "Undo resolves restored tutorial obstacle safely",
+    "passed": false,
+    "position": "<Struct 'Vector' (0x0000021447CC1F50) {x: 500.000000, y: 500.000000, z: 290.000000}>"
+  },
+  {
+    "name": "Restored obstacle collision supports performer",
+    "passed": true
+  }
+]
