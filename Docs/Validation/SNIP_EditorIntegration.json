@@ -1,0 +1,56 @@
+{
+  "level": "/Game/SNIP/LV_SNIP_Prototype.LV_SNIP_Prototype",
+  "game_mode": "/Script/DirectorsCutJAM.SNIPGameMode",
+  "pawn": "/Script/DirectorsCutJAM.SNIPCharacter",
+  "hud": "/Script/DirectorsCutJAM.SNIPHUD",
+  "actors": [
+    {
+      "label": "SNIP / Active Puzzle",
+      "type": "SNIPPuzzle"
+    },
+    {
+      "label": "SNIP / Entrance",
+      "type": "PlayerStart"
+    },
+    {
+      "label": "SNIP / Walnut Worktable",
+      "type": "StaticMeshActor"
+    },
+    {
+      "label": "SNIP / Cutting Mat",
+      "type": "StaticMeshActor"
+    },
+    {
+      "label": "SNIP / Backdrop",
+      "type": "StaticMeshActor"
+    },
+    {
+      "label": "SNIP / Pencil",
+      "type": "StaticMeshActor"
+    },
+    {
+      "label": "SNIP / Paper Stack",
+      "type": "StaticMeshActor"
+    },
+    {
+      "label": "SNIP / Coral Scrap",
+      "type": "StaticMeshActor"
+    },
+    {
+      "label": "SNIP / Softbox",
+      "type": "DirectionalLight"
+    },
+    {
+      "label": "SNIP / Fill",
+      "type": "SkyLight"
+    },
+    {
+      "label": "SNIP / Exposure",
+      "type": "PostProcessVolume"
+    },
+    {
+      "label": "SNIP / Paper Cyclorama",
+      "type": "StaticMeshActor"
+    }
+  ]
+}

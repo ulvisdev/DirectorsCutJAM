@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Puzzle 1 solution accepted",
+    "passed": true
+  },
+  {
+    "name": "Puzzle 1 completed by walking",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000024F37483490) {x: 1142.490304, y: 500.000000, z: 290.150002}>"
+  },
+  {
+    "name": "Puzzle 2 automatic progression",
+    "passed": true
+  },
+  {
+    "name": "Puzzle 2 solution accepted",
+    "passed": true
+  },
+  {
+    "name": "Jump onto paper step",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000024F36BD8F60) {x: 765.143848, y: 500.000000, z: 490.149993}>"
+  },
+  {
+    "name": "Jump onto lowered metal",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000024F24C34BF0) {x: 995.320670, y: 500.000000, z: 690.150005}>"
+  },
+  {
+    "name": "Puzzle 2 exit reached through physics",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000024F36BD8F60) {x: 1402.560803, y: 500.000000, z: 690.150005}>"
+  },
+  {
+    "name": "Puzzle 3 automatic progression",
+    "passed": true
+  },
+  {
+    "name": "Puzzle 3 Y cut accepted",
+    "passed": true
+  },
+  {
+    "name": "Puzzle 3 X cut accepted",
+    "passed": true
+  },
+  {
+    "name": "Puzzle 3 Z cut accepted",
+    "passed": true
+  },
+  {
+    "name": "Final paper step reachable",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000024F24C34BF0) {x: 565.147857, y: 919.766177, z: 490.149995}>"
+  },
+  {
+    "name": "Final metal platform reachable",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000024F37483490) {x: 825.049335, y: 926.782396, z: 690.149998}>"
+  },
+  {
+    "name": "Final PERFECT CUT state",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x0000024F37483490) {x: 825.049335, y: 926.782396, z: 690.149998}>"
+  }
+]

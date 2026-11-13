@@ -1,0 +1,79 @@
+[
+  {
+    "name": "Mouse band identifies metal obstruction",
+    "passed": true
+  },
+  {
+    "name": "Mouse confirmation cannot cut metal",
+    "passed": true
+  },
+  {
+    "name": "Mouse drag selects X interval",
+    "passed": true,
+    "low": 4,
+    "high": 9
+  },
+  {
+    "name": "Mouse release locks selection",
+    "passed": true
+  },
+  {
+    "name": "Second click executes compression",
+    "passed": true,
+    "notice": "SNIP!  Space removed. Possibilities added."
+  },
+  {
+    "name": "RMB cancels locked band",
+    "passed": true
+  },
+  {
+    "name": "Drag mapping view 1 axis 0",
+    "passed": true,
+    "low": 4,
+    "high": 9
+  },
+  {
+    "name": "Click applies view 1 axis 0",
+    "passed": true
+  },
+  {
+    "name": "Drag mapping view 1 axis 2",
+    "passed": true,
+    "low": 2,
+    "high": 4
+  },
+  {
+    "name": "Click applies view 1 axis 2",
+    "passed": true
+  },
+  {
+    "name": "Drag mapping view 2 axis 1",
+    "passed": true,
+    "low": 3,
+    "high": 7
+  },
+  {
+    "name": "Click applies view 2 axis 1",
+    "passed": true
+  },
+  {
+    "name": "Drag mapping view 3 axis 1",
+    "passed": true,
+    "low": 3,
+    "high": 7
+  },
+  {
+    "name": "Click applies view 3 axis 1",
+    "passed": true
+  },
+  {
+    "name": "Drag mapping view 3 axis 2",
+    "passed": true,
+    "low": 2,
+    "high": 4
+  },
+  {
+    "name": "Click applies view 3 axis 2",
+    "passed": true
+  }
+]

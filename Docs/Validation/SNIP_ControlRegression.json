@@ -1,0 +1,91 @@
+[
+  {
+    "name": "Saved decoration cannot block the pawn",
+    "passed": true,
+    "count": 7
+  },
+  {
+    "name": "WASD actually moves character",
+    "passed": true,
+    "distance": 241.85074824857642
+  },
+  {
+    "name": "Walk animation remains inside capsule",
+    "passed": true,
+    "offset": "<Struct 'Vector' (0x000001C1A598EFE0) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Released movement stops",
+    "passed": true,
+    "distance": 0.0
+  },
+  {
+    "name": "Standing jump sample 0",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001C1A598FA80) {x: 300.000000, y: 500.000000, z: 345.550256}>",
+    "offset": "<Struct 'Vector' (0x000001C1A5995AA0) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 1",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001C1A5995AA0) {x: 300.000000, y: 500.000000, z: 394.417185}>",
+    "offset": "<Struct 'Vector' (0x000001C1A5A0D9B0) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 2",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001C1A5A0D9B0) {x: 300.000000, y: 500.000000, z: 436.753569}>",
+    "offset": "<Struct 'Vector' (0x000001C1A5A0DA00) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 3",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001C1A5A0DA00) {x: 300.000000, y: 500.000000, z: 464.215877}>",
+    "offset": "<Struct 'Vector' (0x000001C1A5A0DA50) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 4",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001C1A5A0DA50) {x: 300.000000, y: 500.000000, z: 495.115451}>",
+    "offset": "<Struct 'Vector' (0x000001C1A5A0DAA0) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 5",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001C1A5A0DAA0) {x: 300.000000, y: 500.000000, z: 519.481556}>",
+    "offset": "<Struct 'Vector' (0x000001C1A5A0DAF0) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 6",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001C1A5A0DAF0) {x: 300.000000, y: 500.000000, z: 537.314242}>",
+    "offset": "<Struct 'Vector' (0x000001C1A5A0DB40) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 7",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001C1A5A0DB40) {x: 300.000000, y: 500.000000, z: 546.401197}>",
+    "offset": "<Struct 'Vector' (0x000001C1A5A0DB90) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 8",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001C1A5A0DB90) {x: 300.000000, y: 500.000000, z: 552.800413}>",
+    "offset": "<Struct 'Vector' (0x000001C1A5A0DBE0) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump sample 9",
+    "passed": true,
+    "pos": "<Struct 'Vector' (0x000001C1A5A0DBE0) {x: 300.000000, y: 500.000000, z: 552.666172}>",
+    "offset": "<Struct 'Vector' (0x000001C1A5A0DC30) {x: 0.000000, y: 0.000000, z: -88.000000}>"
+  },
+  {
+    "name": "Standing jump rises and lands vertically",
+    "passed": true,
+    "peak": 262.65041979224384
+  },
+  {
+    "name": "Empty bridge slab valid",
+    "passed": true
+  }
+]

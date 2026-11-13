@@ -1,0 +1,210 @@
+[
+  {
+    "name": "Native pawn possessed",
+    "passed": true
+  },
+  {
+    "name": "Native HUD assigned",
+    "passed": true
+  },
+  {
+    "name": "Cutting disabled in normal view",
+    "passed": true
+  },
+  {
+    "name": "W movement through input",
+    "passed": true,
+    "distance": 261.16680662542615
+  },
+  {
+    "name": "Space jumps through input",
+    "passed": true,
+    "height": 211.66673010834097
+  },
+  {
+    "name": "Orthographic key 2",
+    "passed": true
+  },
+  {
+    "name": "Whole-puzzle framing view 1",
+    "passed": true,
+    "centre": [
+      673.9999389648438,
+      611.0
+    ],
+    "viewport": [
+      1348,
+      1222
+    ]
+  },
+  {
+    "name": "Orthographic key 3",
+    "passed": true
+  },
+  {
+    "name": "Whole-puzzle framing view 2",
+    "passed": true,
+    "centre": [
+      674.0,
+      610.9999389648438
+    ],
+    "viewport": [
+      1348,
+      1222
+    ]
+  },
+  {
+    "name": "Orthographic key 4",
+    "passed": true
+  },
+  {
+    "name": "Whole-puzzle framing view 3",
+    "passed": true,
+    "centre": [
+      673.999755859375,
+      611.0
+    ],
+    "viewport": [
+      1348,
+      1222
+    ]
+  },
+  {
+    "name": "Reject player slab",
+    "passed": true
+  },
+  {
+    "name": "Reject exit slab",
+    "passed": true
+  },
+  {
+    "name": "Reject outside grid",
+    "passed": true
+  },
+  {
+    "name": "Reject zero width",
+    "passed": true
+  },
+  {
+    "name": "Bridge cut accepted",
+    "passed": true
+  },
+  {
+    "name": "Compression animates rather than teleports",
+    "passed": true
+  },
+  {
+    "name": "Concurrent cut rejected",
+    "passed": true
+  },
+  {
+    "name": "Bridge world shrinks by 5 cells",
+    "passed": true
+  },
+  {
+    "name": "Geometry actually moves with collision",
+    "passed": true
+  },
+  {
+    "name": "Z undo restores exact grid",
+    "passed": true
+  },
+  {
+    "name": "Y redo restores exact result",
+    "passed": true
+  },
+  {
+    "name": "1 restores normal camera",
+    "passed": true
+  },
+  {
+    "name": "Walk across compressed bridge and reach exit",
+    "passed": true,
+    "position": "<Struct 'Vector' (0x000001FA8C7A15F0) {x: 1134.500343, y: 500.000000, z: 290.150002}>"
+  },
+  {
+    "name": "Exit advances to puzzle 2",
+    "passed": true
+  },
+  {
+    "name": "Metal cut rejected",
+    "passed": true,
+    "reason": "Metal cannot be snipped. Choose another layer."
+  },
+  {
+    "name": "Rejection leaves all cells intact",
+    "passed": true
+  },
+  {
+    "name": "Paper layers cut accepted",
+    "passed": true
+  },
+  {
+    "name": "Metal survives and descends",
+    "passed": true
+  },
+  {
+    "name": "Paper actually removed",
+    "passed": true
+  },
+  {
+    "name": "Removed cells have no collision",
+    "passed": true
+  },
+  {
+    "name": "Undo restores removed paper and metal",
+    "passed": true
+  },
+  {
+    "name": "Final puzzle horizontal cut",
+    "passed": true
+  },
+  {
+    "name": "Final puzzle vertical cut",
+    "passed": true
+  },
+  {
+    "name": "Undo C restores B across views",
+    "passed": true
+  },
+  {
+    "name": "Multiple undo restores original",
+    "passed": true
+  },
+  {
+    "name": "Redo intermediate state",
+    "passed": true
+  },
+  {
+    "name": "Redo final state",
+    "passed": true
+  },
+  {
+    "name": "New branch cut accepted",
+    "passed": true
+  },
+  {
+    "name": "New cut clears redo branch",
+    "passed": true
+  },
+  {
+    "name": "R restarts current puzzle",
+    "passed": true
+  },
+  {
+    "name": "Undo restores position before second cut",
+    "passed": true
+  },
+  {
+    "name": "Redo preserves original first-cut player position",
+    "passed": true
+  },
+  {
+    "name": "Redo preserves second-cut player position",
+    "passed": true
+  },
+  {
+    "name": "Falling recovers to safe current-state position",
+    "passed": true
+  }
+]
